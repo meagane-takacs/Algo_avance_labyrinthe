@@ -1,0 +1,113 @@
+pion = 0
+On récupère les voisins de la case 0. On les place dans la stack
+On avance vers le dernier voisin.On passe ce voisin a case courante
+On récupère les nouveaux voisins de case courante que l'on place aussi dans la stack
+Si à cette case pas de voisin non visité on reviens à la case d'avant de la derniere valeur de la stack on regarde
+si il y a un voisin non visité
+Si oui on y va, sinon on recule encore
+
+
+
+
+
+
+
+------------------------------
+Ancienne version qui bloque sur l'exemple
+
+On place un bonhomme à la case 0
+On dit qu'il tourne systématiquement à droite dès qu'il rencontre un border
+Je veux avancer => je peux
+Je veux avancer => je rencontre un mur, je tourne a droite => mur je retourne a droite, libre, j'avance.
+A chaque case déjà passer le bonhomme place un grain de riz ce qu'il signifie qu'il ne peux pas retourner sur cette case
+
+
+XPion =0;
+YPion =0;
+OrientationPion=vers la droite;
+
+function avancerPion
+{ 
+	if(borderDevant() == true)
+	tourner vers la droite()
+} else if
+	pas de grain de riz devant ALORS changer de case
+} else 
+	tourner vers la droite()
+
+function borderDevant()
+{
+	Si orientation pion = droite && border droite ==true => true
+	Si orientation pion = gauche && border gauche == true => true
+	Si orientation pion = bas && border bas == true => true
+	Si orientation pion = haut && border haut == true => true
+ELSE 
+	===> False
+}
+	
+function Tourner vers la droite ()
+{
+	if OrientationPion = vers la droite
+	ALORS OrientationPion = vers le bas
+
+	if Orientation Pion = vers le bas
+	ALORS orientationPion = vers la gauche
+	
+	if Orientation Pion = vers le gauche
+	ALORS orientationPion = vers le haut
+
+	if orientation Pion = vers le haut
+	ALORS orientationPion = vers la droite
+	
+}
+
+function ChangedeCase ()
+{
+	Poser grain de riz()
+	if regarde vers la droite de la case ALORS y+1
+	if regarde vers la gauche de la casee ALORS = Y-1
+	if regarde vers lE BAS de la case ALORS x+1
+	if regarde vers le haut de la case alors X-1
+		
+}
+
+
+PoserGrainDeriz()
+{
+	tab riz(XPion,YPion)= true	
+}
+
+
+GraindeRizDevant()
+
+{
+	if OrientationPion = vers la droite 
+	ALORS if tab riz (XPion, YPion +1)
+	ALORS true
+
+	if OrientationPion = vers la gauche
+	ALORS if tab riz (XPion, YPion -1)
+	ALORS true
+
+	if OrientationPion = vers la haut
+	ALORS if tab riz (XPion - 1, YPion)
+	ALORS true
+
+	if OrientationPion = vers le bas
+	ALORS if tab riz (XPion + 1, YPion)
+	ALORS true
+	
+}
+
+
+
+tabLaby : [X][Y] tableau de cases
+
+cases :
+	X
+	Y
+	borderRight
+	borderLeft
+	borderTop
+	borderBottom
+	grain : true / false
