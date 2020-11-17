@@ -1,3 +1,29 @@
+BFS
+pion = 0
+On récupère les voisins de la case 0.On les place dans la File
+On avance vers les voisins (on les sort de la file). On passe ses voisins a case courante.
+On recupere les nouveaux voisins des cases courante quel 'on place aussi dans la file
+Si à cette case pas de voisin non visité on arrête. On continue les autres chemins en parallèle
+
+2.
+case courante = 0,0
+On pose un riz sur case courante
+on ajoute case courante dans la file
+Tant que la file n'est pas vide
+	case courante <-- premier élément dans la file (on le sort de la file FIFO)
+	si c'est la sortie, on arrête
+	Pour tous les voisins non visités de case courante
+		on pose un riz sur le voisin courant
+		on ajoute le voisin courant dans la file (par l'arrière)
+		
+
+
+
+------------------------
+
+
+
+DFS
 pion = 0
 On récupère les voisins de la case 0. On les place dans la stack
 On avance vers le dernier voisin.On passe ce voisin a case courante

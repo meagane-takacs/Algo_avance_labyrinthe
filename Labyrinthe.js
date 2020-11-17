@@ -151,251 +151,47 @@ console.log(data);
   var tailleLaby = '6';
   var labyrinthe = createLabyrinth(data[tailleLaby]['ex-1'], parseInt(tailleLaby));
   afficherLabyrinthe(labyrinthe, parseInt(tailleLaby));
-  DFS(labyrinthe)
+  //DFS(labyrinthe)
+  BFS(labyrinthe);
 
-
-
-function get_unvisited_neighbours(case_courante)
-{
-  //let case_courante;
-  /*let neighbour;
-  let case_bas = case_courante.posX+1;
-  let case_haut = case_courante.posX-1;
-  let case_droite = case_courante.posY+1;
-  let case_gauche = case_courante.posY-1;
-    if(case_bas.walls[0] === false)
-    {
-      neighbour = case_bas;
-    }
-    if(case_haut.walls[1] === false)
-    {
-      neighbour = case_haut;
-    }
-    if(case_droite.walls[2] === false)
-    {
-      neighbour = case_droite;
-    }
-    if(case_gauche.walls[3] === false)
-    {
-      neighbour = case_gauche;
-    }
-    return neighbour;*/
-
+  function get_unvisited_neighbours(case_courante){
     let neighbours = [];
-    let case_bas;
-    let case_haut;
-    let case_droite;
-    let case_gauche;
 
-    // Cas en haut à gauche (si tu es en 0 0)
-    if(case_courante.posX==0 && case_courante.posY==0)
-    {
-      //On regarde ta case de droite qui a pour positier X=0 et ton Y+1
-      case_droite = {posX:0, posY :case_courante.posY+1}
-      // Si ta case de droite dans le labyrinthe n'a pas de mur à gauche et pas de grain de riz
-      if( labyrinthe[case_droite.posX][case_droite.posY].walls[3] == false && labyrinthe[case_droite.posX][case_droite.posY].rice_on_cell == false)
-      {
-        // on l'ajoute dans les voisins
+    let case_bas = {posX: case_courante.posX+1, posY: case_courante.posY};
+
+    let case_haut = {posX: case_courante.posX-1, posY: case_courante.posY};
+
+    let case_droite = {posX : case_courante.posX, posY: case_courante.posY+1};
+
+    let case_gauche = {posX: case_courante.posX, posY: case_courante.posY-1};
+
+    // Si la case courante n'a pas de mur en haut
+    if (labyrinthe[case_courante.posX][case_courante.posY].walls[0] === false){
+      // Si la cause du haut n'a pas de grain de riz
+      if (labyrinthe[case_haut.posX][case_haut.posY].rice_on_cell === false){
+        // alors la case du haut est un voisin  
+        neighbours.push(case_haut);
+      }
+    }
+    if (labyrinthe[case_courante.posX][case_courante.posY].walls[1] === false){
+      if (labyrinthe[case_droite.posX][case_droite.posY].rice_on_cell === false){
         neighbours.push(case_droite);
       }
-      // On regarde ta case du bas qui a pour position ta pos.X+1 et ta posY.
-      case_bas = {posX: case_courante.posX+1, posY : case_courante.posY=0}
-      //Si ta case du bas dans le labyrinthe n'a pas de mur en haut et n'a pas de grain de riz
-      if ( labyrinthe[case_bas.posX][case_bas.posY].walls[0] == false && labyrinthe[case_bas.posX][case_bas.posY].rice_on_cell == false)
-      {
-        //On l'ajoute dans les voisins
+    }
+    if (labyrinthe[case_courante.posX][case_courante.posY].walls[2] === false){
+      if (labyrinthe[case_bas.posX][case_bas.posY].rice_on_cell === false){
         neighbours.push(case_bas);
       }
     }
-
-    // Cas en haut à droite (si tu es en X=0 et Y=derniere case du laby)
-    else if(case_courante.posX==0 && case_courante.posY == tailleLaby - 1)
-    {
-      //On regarde ta case de gauche qui est ton X et ton Y -1
-      case_gauche = {posX:0, posY:case_courante.posY-1}
-      //Si ta case de gauche n'a pas de mur à droite et pas de grain de riz
-      if (labyrinthe[case_gauche.posX][case_gauche.posY].walls[1] == false && labyrinthe[case_gauche.posX][case_gauche.posY].rice_on_cell == false)
-      {
-        //On l'ajoute dans les voisins
-        neighbours.push(case_gauche)
-      }
-      //On regarde ta case du bas (si tu es en x+1 et meme Y)
-      case_bas = {posX: case_courante.posX+1, posY: case_courante.posY}
-      //Si ta case du bas n'a pas de mur en haut et pas de grain de riz
-      if(labyrinthe[case_bas.posX][case_bas.posY].walls[0] == false && labyrinthe[case_bas.posX][case_bas.posY].rice_on_cell == false)
-      {
-        //On l'ajoute dans les voisins
-        neighbours.push(case_bas)
-      }
-      
-    }         
-  
-    // Cas en bas à gauche (si tu es pos derniere case du laby et Y = 0)
-    else if(case_courante.posX==tailleLaby-1 && case_courante.posY==0)
-    {
-      // On regarde ta case du haut (si tu es en pos X-1 et meme pos Y)
-      case_haut = {posX:case_courante.posX-1, posY:case_courante.posY};
-      //Si ta case du haut n'a pas de mur en bas et pas de grain de riz
-      if (labyrinthe[case_haut.posX][case_haut.posY].walls[2] == false && labyrinthe[case_haut.posX][case_haut.posY].rice_on_cell == false)
-      {
-        // On l'ajoute dans les voisins
-        neighbours.push(case_haut)
-      }
-      //On regarde ta case de droite (meme X et Y+1)
-      case_droite = {posX:case_courante.posX, posY:case_courante.posY+1};
-      //So ta casee de drotie n'a pas de mur a gauche et n'a pas de grain de riz
-      if (labyrinthe[case_droite.posX][case_droite.posY].walls[3] == false && labyrinthe[case_droite.posX][case_droite.posY].rice_on_cell == false)
-      {
-        //On l'ajoute au voisin
-        neighbours.push(case_droite)
-      }
-    }
-
-    // Cas en bas à droite (si ton pos X = derniere case du laby et pareil pour le Y)
-    else if(case_courante.posX==tailleLaby-1 && case_courante.posY==tailleLaby-1)
-    {
-      //On regarde ta case de gauche (si tu es en pos X la meme et Y-1)
-      case_gauche = {posX:case_courante.posX, posY:case_courante.posY-1};
-      //Si ta case de gauche n'a pas de mur a droite et pas de grain de riz
-      if (labyrinthe[case_gauche.posX][case_gauche.posY].walls[1] == false && labyrinthe[case_gauche.posX][case_gauche.posY].rice_on_cell == false)
-      {
-        //On l'ajoute au voisin
-        neighbours.push(case_gauche)
-      }
-      //On regarde ta case du haut(meme Y, mais ton X-1)
-      case_haut = {posX:case_courante.posX-1, posY:case_courante.posY};
-      //Si ta case du haut n'a pas de mur en bas et n'a pas de grain de riz
-      if (labyrinthe[case_haut.posX][case_haut.posY].walls[2] == false && labyrinthe[case_haut.posX][case_haut.posY].rice_on_cell == false)
-      {
-        //On l'ajoute au voisin
-        neighbours.push(case_haut)
-      }
-      
-    }
-
-    // Cas première ligne
-    else if(case_courante.posX==0)
-    {
-      //On regarde ta case du bas (meme Y mais pos X+1)
-      case_bas = {posX: case_courante.posX+1, posY : case_courante.posY}
-      //Si ta case du bas ne possede pas de mur en haut et pas de grain de riz
-      if ( labyrinthe[case_bas.posX][case_bas.posY].walls[0] == false && labyrinthe[case_bas.posX][case_bas.posY].rice_on_cell == false)
-      {
-        //On l'ajoute au voisin
-        neighbours.push(case_bas);
-      }
-      
-      case_droite = {posX:0, posY :case_courante.posY+1}
-      // Si la case de droite dans le labyrinthe n'a pas de mur à gauche
-      if( labyrinthe[case_droite.posX][case_droite.posY].walls[3] == false && labyrinthe[case_droite.posX][case_droite.posY].rice_on_cell == false)
-      {
-        // on l'ajoute dans les voisins
-        neighbours.push(case_droite);
-      }
-
-      case_gauche = {posX:0, posY:case_courante.posY-1}
-      if (labyrinthe[case_gauche.posX][case_gauche.posY].walls[1] == false && labyrinthe[case_gauche.posX][case_gauche.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_gauche)
-      }
-    }
-
-    // Cas dernière ligne
-    else if(case_courante.posX == tailleLaby-1)
-    {
-      case_haut = {posX:case_courante.posX-1, posY:case_courante.posY};
-      if (labyrinthe[case_haut.posX][case_haut.posY].walls[2] == false && labyrinthe[case_haut.posX][case_haut.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_haut)
-      }
-      
-      case_droite = {posX:case_courante.posX, posY:case_courante.posY+1};
-      if (labyrinthe[case_droite.posX][case_droite.posY].walls[3] == false && labyrinthe[case_droite.posX][case_droite.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_droite)
-      }
-
-      case_gauche = {posX:case_courante.posX, posY:case_courante.posY-1};
-      if (labyrinthe[case_gauche.posX][case_gauche.posY].walls[1] == false && labyrinthe[case_gauche.posX][case_gauche.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_gauche)
-      }
-    }
-
-    // Cas première colonne
-    else if(case_courante.posY == 0)
-    {
-      case_haut = {posX:case_courante.posX-1, posY:case_courante.posY};
-      if (labyrinthe[case_haut.posX][case_haut.posY].walls[2] == false && labyrinthe[case_haut.posX][case_haut.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_haut)
-      }
-      
-      case_droite = {posX:case_courante.posX, posY:case_courante.posY+1};
-      if (labyrinthe[case_droite.posX][case_droite.posY].walls[3] == false && labyrinthe[case_droite.posX][case_droite.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_droite)
-      }
-
-      case_bas = {posX:case_courante.posX+1, posY:case_courante.posY};
-      if(labyrinthe[case_bas.posX][case_bas.posY].walls[0] == false && labyrinthe[case_bas.posX][case_bas.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_bas)
-      }
-    }
-
-    // Cas dernière colonne
-    else if(case_courante.posY == tailleLaby-1)
-    {
-      case_haut = {posX:case_courante.posX-1, posY:case_courante.posY};
-      if (labyrinthe[case_haut.posX][case_haut.posY].walls[2] == false && labyrinthe[case_haut.posX][case_haut.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_haut)
-      }
-
-      case_gauche = {posX:case_courante.posX, posY:case_courante.posY-1};
-      if (labyrinthe[case_gauche.posX][case_gauche.posY].walls[1] == false && labyrinthe[case_gauche.posX][case_gauche.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_gauche)
-      }
-      
-      case_bas = {posX:case_courante.posX+1, posY:case_courante.posY};
-      if(labyrinthe[case_bas.posX][case_bas.posY].walls[0] == false && labyrinthe[case_bas.posX][case_bas.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_bas)
-      }
-    }
-
-    // Sinon
-    else{
-      case_bas = {posX:case_courante.posX+1, posY:case_courante.posY};
-      if(labyrinthe[case_bas.posX][case_bas.posY].walls[0] == false && labyrinthe[case_bas.posX][case_bas.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_bas)
-      }
-
-      case_haut = {posX:case_courante.posX-1, posY:case_courante.posY};
-      if (labyrinthe[case_haut.posX][case_haut.posY].walls[2] == false && labyrinthe[case_haut.posX][case_haut.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_haut)
-      }
-
-      case_droite = {posX:case_courante.posX, posY:case_courante.posY+1};
-      if (labyrinthe[case_droite.posX][case_droite.posY].walls[3] == false && labyrinthe[case_droite.posX][case_droite.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_droite)
-      }
-      
-      case_gauche = {posX:case_courante.posX, posY:case_courante.posY-1};
-      if (labyrinthe[case_gauche.posX][case_gauche.posY].walls[1] == false && labyrinthe[case_gauche.posX][case_gauche.posY].rice_on_cell == false)
-      {
-        neighbours.push(case_gauche)
+    if (labyrinthe[case_courante.posX][case_courante.posY].walls[3] === false){
+      if (labyrinthe[case_gauche.posX][case_gauche.posY].rice_on_cell === false){
+        neighbours.push(case_gauche);
       }
     }
 
     return neighbours;
-
 }
+
 
 function DFS(labyrinthe) 
 {
@@ -455,6 +251,35 @@ function DFS(labyrinthe)
   console.log("fin en nbEtape "+nombreEtape)
 }
 
+
+function BFS (labyrinthe)
+{
+  case_courante = {posX : 0, posY : 0 }
+  labyrinthe[case_courante.posX][case_courante.posY].rice_on_cell = true;
+  let queue = [];
+  let neighbours = [];
+  queue.push(case_courante);
+  while (queue.length > 0)
+  {
+    case_courante = queue.shift();
+    if (labyrinthe[case_courante.posX][case_courante.posY].end_cell == true)
+    {
+      return;
+    } 
+    else 
+    {
+      neighbours = get_unvisited_neighbours(case_courante);
+      for (i=0; i < neighbours.length ; i++)
+      {
+        let voisin = {posX:0, posY :0};
+        voisin.posX = neighbours[i].posX;
+        voisin.posY = neighbours[i].posY;
+        labyrinthe[voisin.posX][voisin.posY].rice_on_cell = true;
+        queue.push(voisin);
+      }
+    }
+  }
+}
 
 
 /*
