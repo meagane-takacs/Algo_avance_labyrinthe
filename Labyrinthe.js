@@ -87,61 +87,54 @@ console.log(data);
       
         var maCase = document.createElement('div');
         maCase.classList.add("case");
+        id = "X" + ligneCourante[j].posX + "-Y"+ligneCourante[j].posY;
+        maCase.id = id;
         grid.appendChild(maCase);
         maCase.textContent ="X:" + ligneCourante[j].posX + " Y: " + ligneCourante[j].posY; 
         
         if (ligneCourante[j].walls[0] == true) 
         {
           maCase.style.borderTop = 'solid black';
-          id = ligneCourante[j].posX + "-" + ligneCourante[j].posY;
         }
         else 
         {
           maCase.style.borderTop = 'solid white'
-          id = ligneCourante[j].posX + "-" + ligneCourante[j].posY;
         }
         if (ligneCourante[j].walls[1] == true) 
         {
           maCase.style.borderRight = 'solid black';
-          id = ligneCourante[j].posX + "-" + ligneCourante[j].posY;
         }
         else 
         {
           maCase.style.borderRight = 'solid white'
-          id = ligneCourante[j].posX + "-" + ligneCourante[j].posY;
         }
         if (ligneCourante[j].walls[2] == true) 
         {
           maCase.style.borderBottom = 'solid black';
-          id = ligneCourante[j].posX + "-" + ligneCourante[j].posY;
         }
         else 
         {
           maCase.style.borderBottom= 'solid white'
-          id = ligneCourante[j].posX + "-" + ligneCourante[j].posY;
         }
         if (ligneCourante[j].walls[3] == true) 
         {
           maCase.style.borderLeft = 'solid black';
-          id = ligneCourante[j].posX + "-" + ligneCourante[j].posY;
         }
         else 
         {
           maCase.style.borderLeft = 'solid white'
-          id = ligneCourante[j].posX + "-" + ligneCourante[j].posY;
         }
         if(i==0 && j==0)
         {
           maCase.style.backgroundColor = 'orange';
-          id = ligneCourante[j].posX + "-" + ligneCourante[j].posY;
           ligneCourante[j].start_cell = true;
         } 
         if (i == labyrinthe.length -1 && j == tailleLigne-1)
         {
           maCase.style.backgroundColor = 'blue';
-          id = ligneCourante[j].posX + "-" + ligneCourante[j].posY;
           ligneCourante[j].end_cell= true;
         }
+        
       } // Fin du for(j=0; j<tailleLigne;j++)
     } // Fin du pour chaque ligne
  
@@ -254,27 +247,50 @@ function DFS(labyrinthe)
 
 function BFS (labyrinthe)
 {
+  //pion = 0 
   case_courante = {posX : 0, posY : 0 }
+  //on place un grain de riz sur la case courante
   labyrinthe[case_courante.posX][case_courante.posY].rice_on_cell = true;
+
+  //affichage
+  let myID = '#X'+case_courante.posX+"-Y"+case_courante.posY
+  let query = document.querySelector(myID);
+  query.style.backgroundColor = 'aquamarine';
+  
+  //on déclare un tableau de file vide
   let queue = [];
+  //On déclare un tableau de voisin vide
   let neighbours = [];
+  //On ajoute case courante dans la file
   queue.push(case_courante);
+  //Tant que la file est supérieure à 0
   while (queue.length > 0)
   {
+    //On récupère le premier voisin mis dans la file 
     case_courante = queue.shift();
+    //Si la case courante est sur la case de sortie
     if (labyrinthe[case_courante.posX][case_courante.posY].end_cell == true)
     {
+      //on arrete
       return;
     } 
     else 
-    {
+    {//Sinon, on apelle la fonction de récupération des voisins
       neighbours = get_unvisited_neighbours(case_courante);
+      //Pour tout les voisins non visité de case courante
       for (i=0; i < neighbours.length ; i++)
       {
+        //On ajoute les cases une par une dans la file
         let voisin = {posX:0, posY :0};
         voisin.posX = neighbours[i].posX;
         voisin.posY = neighbours[i].posY;
+        //On pose un grain de riz sur chacune
         labyrinthe[voisin.posX][voisin.posY].rice_on_cell = true;
+        //Affichage
+        let myID = '#X'+voisin.posX+"-Y"+voisin.posY
+        let query = document.querySelector(myID);
+        query.style.backgroundColor = 'aquamarine';
+        //On ajoute le voisin courant dans la file (par l'arrière)
         queue.push(voisin);
       }
     }
